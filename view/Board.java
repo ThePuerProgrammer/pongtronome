@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
 import controller.BlockSoundListener;
 import model.Ball;
