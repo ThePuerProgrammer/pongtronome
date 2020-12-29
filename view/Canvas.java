@@ -23,7 +23,7 @@ public class Canvas extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setColor(Color.WHITE);
-        g2.fillRect((Board.BOARD_WIDTH / 2) - 2, 0, 4, Board.BOARD_HEIGHT);
+        g2.fillRect((Board.BOARD_WIDTH / 2) - 1, 0, 2, Board.BOARD_HEIGHT);
 
         for (var c: board.getComponents()) {
             c.render(g2);

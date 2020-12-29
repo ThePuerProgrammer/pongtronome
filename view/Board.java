@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import model.Ball;
 import model.Component;
+import model.Paddle;
 
 public class Board implements Runnable {
 
@@ -22,8 +23,12 @@ public class Board implements Runnable {
     public static final int BOARD_WIDTH = 600;
     public static final int BOARD_HEIGHT = 300;
     public static final int BALL_WIDTH = 10;
+    private static int paddleY = BOARD_HEIGHT / 2;
+    private static int ballX = BOARD_WIDTH / 2;
     private Canvas canvas;
     private Ball ball;
+    private Paddle lPaddle;
+    private Paddle rPaddle;
 
     private enum State {
         STANDBY, RUNNING
@@ -46,15 +51,20 @@ public class Board implements Runnable {
 
         cp.add(BorderLayout.CENTER, centerPanel);
         centerPanel.add(BorderLayout.CENTER, canvas);
-        ball = new Ball(BOARD_HEIGHT / 2, BOARD_WIDTH / 2, 10, 10, Color.WHITE);
+        ball = new Ball((BOARD_WIDTH / 2) - 5, BOARD_HEIGHT / 2, 10, 10, Color.WHITE);
+        lPaddle = new Paddle(0, 10, 40, Color.WHITE);
+        rPaddle = new Paddle(BOARD_WIDTH - 10, 10, 40, Color.WHITE);
         components.add(ball);
+        components.add(lPaddle);
+        components.add(rPaddle);
 
         canvas.repaint();
+        start();
     }
 
     private void start() {
         state = State.RUNNING;
-        thread = new Thread();
+        thread = new Thread(this);
         thread.start();
     }
 
@@ -80,9 +90,19 @@ public class Board implements Runnable {
     }
 
     private void tick() {
+        paddleY = ball.getY();
+        ballX = ball.getX();
         for (var c: components) {
             c.animate();
         }
+    }
+
+    public static int getPaddleY() {
+        return paddleY;
+    }
+
+    public static int getBallX() {
+        return ballX;
     }
 
     public ArrayList<Component> getComponents() {

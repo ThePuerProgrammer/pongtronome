@@ -14,8 +14,8 @@ public class Ball extends Component {
     private int playArea = Board.BOARD_WIDTH - 20 - (Board.BALL_WIDTH / 2);
     private int speed = bpm * playArea / 60 / 60;
     private float fSpeed = bpm * playArea / 60 / 60;
-    private float fPoint = fSpeed - speed;
-    private int carry = (int)(100.0 / (fPoint * 100));
+    private float fPoint = fSpeed - (float)speed;
+    private int carry = fPoint > 0 ? (int)(100.0 / (fPoint * 100)) : 2_000_000_000;
     private int counter = 0;
 
     public Ball(int x, int y, int w, int h, Color c) {
@@ -57,13 +57,17 @@ public class Ball extends Component {
             } else {
                 super.x += speed;
             }
-            if (super.x - w / 2 >= Board.BOARD_WIDTH - 10)
+            if (super.x >= Board.BOARD_WIDTH - w * 2)
                 left = true;
         }
     }
 
     public int getY() {
         return super.y;
+    }
+
+    public int getX() {
+        return super.x;
     }
     
     public void setBpm(int bpm) {
