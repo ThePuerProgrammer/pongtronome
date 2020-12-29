@@ -6,9 +6,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
 
+import controller.BlockSoundListener;
 import model.Ball;
 import model.Component;
 import model.Paddle;
@@ -29,6 +34,10 @@ public class Board implements Runnable {
     private Ball ball;
     private Paddle lPaddle;
     private Paddle rPaddle;
+    private JTextField bpmField;
+    private JButton bpmButton;
+    private JButton startButton;
+    private JButton stopButton;
 
     private enum State {
         STANDBY, RUNNING
@@ -51,15 +60,42 @@ public class Board implements Runnable {
 
         cp.add(BorderLayout.CENTER, centerPanel);
         centerPanel.add(BorderLayout.CENTER, canvas);
+        bpmField = new JTextField("BPM");
+        bpmButton = new JButton("Submit BPM");
+
         ball = new Ball((BOARD_WIDTH / 2) - 5, BOARD_HEIGHT / 2, 10, 10, Color.WHITE);
+        ball.addListener(new BlockSoundListener());
+
         lPaddle = new Paddle(0, 10, 40, Color.WHITE);
         rPaddle = new Paddle(BOARD_WIDTH - 10, 10, 40, Color.WHITE);
         components.add(ball);
         components.add(lPaddle);
         components.add(rPaddle);
 
+        bpmButton.addActionListener( e -> {
+            ball.setBpm(Integer.parseInt(bpmField.getText()));
+        });
+
+        startButton = new JButton("Start");
+        stopButton = new JButton("Stop");
+
+        startButton.addActionListener( e -> {
+            start();
+        });
+
+        stopButton.addActionListener( e -> {
+            state = State.STANDBY;
+        });
+
+        JPanel southPanel = new JPanel();
+        southPanel.setPreferredSize(new Dimension(BALL_WIDTH, 40));
+        southPanel.add(bpmField);
+        southPanel.add(bpmButton);
+        southPanel.add(startButton);
+        southPanel.add(stopButton);
+        cp.add(BorderLayout.SOUTH, southPanel);
+
         canvas.repaint();
-        start();
     }
 
     private void start() {
